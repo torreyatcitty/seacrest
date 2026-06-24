@@ -91,6 +91,7 @@ export async function getWalletConnector(walletConnectProjectId, relayUrl, reque
           eip155: {
             methods: [
               'eth_sendTransaction',
+              'eth_getTransactionCount',
               'personal_sign',
               'net_version',
               'eth_accounts'
