@@ -1,0 +1,27 @@
+name: Stream Test
+# Manual check that action output still streams to the live job log.
+# Watch the run live in the Actions UI:
+#  - "Plain run step" lines should appear one at a time (control group)
+#  - "Node action" lines should ALSO appear one at a time — this is the
+#    mechanism Seacrest relies on to show its QR code mid-step
+#  - "Composite action" output is expected to stay hidden until the step
+#    completes (the runner behavior that broke the old composite Seacrest)
+on: workflow_dispatch
+
+jobs:
+  stream:
+    name: Live log streaming check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Plain run step (control — should stream)
+        run: |
+          for i in $(seq 1 5); do
+            echo "[stream-test][run-step] line $i of 5"
+            sleep 2
+          done
+
+      - name: Node action (must stream — Seacrest depends on this)
+        uses: ./.github/actions/stream-test

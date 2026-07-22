@@ -70,12 +70,21 @@ export async function getWalletConnector(walletConnectProjectId, relayUrl, reque
       }
     }, opts.uriTimeout);
 
+    let annotated = false;
+
     function showUntilAttempted(uri) {
       if (!attempted) {
         console.info(
           `\n\n[Seacrest][WalletConnect] Please navigate to url:\n\n${uri}\n\nor visit QR code:\n`
         );
         qrcode.generate(uri, { small: !opts.large });
+
+        // Also surface the pairing URI as a workflow annotation: annotations
+        // appear on the run summary page independently of step-log streaming.
+        if (!annotated && process.env["GITHUB_ACTIONS"] === "true") {
+          annotated = true;
+          console.info(`::notice title=Seacrest WalletConnect pairing URI::${uri}`);
+        }
 
         if (opts.reshowDelay !== null) {
           reshowTimer = setTimeout(() => showUntilAttempted(uri), opts.reshowDelay);

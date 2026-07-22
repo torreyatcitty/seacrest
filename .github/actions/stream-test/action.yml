@@ -1,0 +1,5 @@
+name: "Stream Test"
+description: "Prints a line every 2s for 40s to verify node-action stdout streams to the live job log"
+runs:
+  using: "node24"
+  main: "main.mjs"
