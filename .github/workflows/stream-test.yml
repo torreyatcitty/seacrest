@@ -24,8 +24,9 @@ jobs:
 
       - name: Plain run step (control — should stream)
         run: |
-          for i in $(seq 1 5); do
-            echo "[stream-test][run-step] line $i of 5"
+          echo "::notice title=stream-test run-step annotation::emitted at run-step line 0"
+          for i in $(seq 1 60); do
+            echo "[stream-test][run-step] line $i of 60"
             sleep 2
           done
 
