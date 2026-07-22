@@ -6,7 +6,13 @@ name: Stream Test
 #    mechanism Seacrest relies on to show its QR code mid-step
 #  - "Composite action" output is expected to stay hidden until the step
 #    completes (the runner behavior that broke the old composite Seacrest)
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  # push trigger so the check can run from a branch before this workflow
+  # exists on the default branch (workflow_dispatch requires that)
+  push:
+    branches:
+      - fix/js-action-live-logs
 
 jobs:
   stream:
