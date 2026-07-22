@@ -16,6 +16,13 @@ inputs:
   wallet_connect_project_id:
     description: "Your WalletConnect project id [defaults to secret WALLET_CONNECT_PROJECT_ID]"
     required: true
+  github_token:
+    description: >-
+      Token used to post the WalletConnect pairing URI as a commit comment
+      (deleted automatically once pairing completes). Needed because GitHub
+      buffers live step logs, hiding the QR code mid-step. Pass
+      secrets.GITHUB_TOKEN; requires contents: write. Omit to disable.
+    required: false
 # A JavaScript action (not composite): GitHub's runner buffers composite
 # child-step output until the step completes, which hides the WalletConnect
 # QR code exactly when it needs to be scanned. JavaScript action stdout

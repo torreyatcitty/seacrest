@@ -1,5 +1,6 @@
 import SignClient from '@walletconnect/sign-client'
 import qrcode from "qrcode-terminal";
+import { postPairingUri, deletePairingComment, pairingCommentsEnabled } from "./github.mjs";
 
 const networks = {
   'mainnet': 1,
@@ -79,11 +80,21 @@ export async function getWalletConnector(walletConnectProjectId, relayUrl, reque
         );
         qrcode.generate(uri, { small: !opts.large });
 
-        // Also surface the pairing URI as a workflow annotation: annotations
-        // appear on the run summary page independently of step-log streaming.
+        // Also surface the pairing URI outside the step logs: GitHub buffers
+        // all live step output until the step completes, so the QR above is
+        // invisible in the UI while pairing waits. The annotation appears on
+        // the run summary once the job ends (post-hoc record); the commit
+        // comment (see github.mjs) is readable immediately via API/web.
         if (!annotated && process.env["GITHUB_ACTIONS"] === "true") {
           annotated = true;
           console.info(`::notice title=Seacrest WalletConnect pairing URI::${uri}`);
+          if (pairingCommentsEnabled()) {
+            postPairingUri(uri);
+          } else {
+            console.info(
+              `[Seacrest][GitHub] No GITHUB_TOKEN available; pairing URI will not be posted as a commit comment.`
+            );
+          }
         }
 
         if (opts.reshowDelay !== null) {
@@ -135,6 +146,7 @@ export async function getWalletConnector(walletConnectProjectId, relayUrl, reque
               )}`
             );
 
+            deletePairingComment();
             resolve({ signClient, session, chainId: requestedNetwork, accounts });
           }
         });
