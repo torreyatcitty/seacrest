@@ -32,3 +32,6 @@ jobs:
 
       - name: Node action (must stream — Seacrest depends on this)
         uses: ./.github/actions/stream-test
+
+      - name: Composite action (the original Seacrest shape)
+        uses: ./.github/actions/stream-test-composite

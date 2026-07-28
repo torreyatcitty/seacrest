@@ -1,0 +1,11 @@
+name: "Stream Test (composite)"
+description: "Prints a line every 2s for 60s from a composite run step — tests whether composite child-step output streams live (the original Seacrest shape)"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        for i in $(seq 1 30); do
+          echo "[stream-test][composite] line $i of 30 — if you can read this in the live UI before line 30, composite streaming works"
+          sleep 2
+        done
+      shell: bash
